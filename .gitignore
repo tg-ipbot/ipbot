@@ -1,0 +1,6 @@
+# IDEA
+/.idea/
+# Application specific stuff
+/run/
+# Rust
+/target/
