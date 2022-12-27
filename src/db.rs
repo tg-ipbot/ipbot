@@ -114,13 +114,17 @@ async fn process_token_request<T: Sync + Send + Debug + From<String>>(
         (app.clone(), app_id)
     } else {
         let app_id = con.get(USER_ID_KEY).await.unwrap();
-
+        debug!("Register new application: {}", app_id);
         (format!("app:{}", app_id), app_id)
     };
 
     let user_token: String = match con.hget(app_key.as_str(), "token").await.ok() {
-        Some(token) => token,
+        Some(token) => {
+            debug!("Found existing token for the application {}", app_id);
+            token
+        }
         None => {
+            debug!("Generate a token for the application {}", app_id);
             let token = generate_token(app_id, &id);
 
             if let Err(e) = redis::pipe()
