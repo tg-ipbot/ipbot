@@ -1,4 +1,5 @@
 use core::fmt::Debug;
+use std::str::FromStr;
 use std::time;
 
 use blake2::{digest::consts::U16, Digest};
@@ -92,22 +93,35 @@ async fn process_token_request<T: Sync + Send + Debug + From<String>>(
     id: UserId,
 ) {
     let user_key = format!("user:{}", id.0);
-
     let app_iter: Vec<String> = con.smembers(user_key.as_str()).await.unwrap();
-    let mut app_id: Option<u32> = None;
 
-    let app_key = if let Some(app) = app_iter.iter().next() {
+    let (app_key, app_id) = if let Some(app) = app_iter.iter().next() {
         debug!("Found application registered: {}", app);
-        app.clone()
+        let mut it = app.split(":");
+        let app_id = loop {
+            if let Some(part) = it.next() {
+                let result = u32::from_str(part).ok();
+
+                if result.is_some() {
+                    break result.unwrap();
+                }
+            } else {
+                error!("Invalid application entry in the DB: {}", app);
+                panic!();
+            }
+        };
+
+        (app.clone(), app_id)
     } else {
-        app_id = Some(con.get(USER_ID_KEY).await.unwrap());
-        format!("app:{}", app_id.unwrap())
+        let app_id = con.get(USER_ID_KEY).await.unwrap();
+
+        (format!("app:{}", app_id), app_id)
     };
 
     let user_token: String = match con.hget(app_key.as_str(), "token").await.ok() {
         Some(token) => token,
         None => {
-            let token = generate_token(app_id.unwrap(), &id);
+            let token = generate_token(app_id, &id);
 
             if let Err(e) = redis::pipe()
                 .atomic()
