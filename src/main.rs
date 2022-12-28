@@ -5,9 +5,11 @@ use teloxide::prelude::*;
 
 use bot::setup_bot;
 use db::{db_task, DbCommand};
+use rest::run_server;
 
 mod bot;
 mod db;
+mod rest;
 
 #[derive(Debug)]
 pub(self) struct ApplicationCommand<T> {
@@ -26,8 +28,9 @@ async fn main() {
     env_logger::init();
     let tgbot = Bot::from_env();
     let (tx, rx) = tokio::sync::mpsc::channel::<ApplicationCommand<String>>(16);
+    let tx2 = tx.clone();
 
-    if let Err(e) = tokio::try_join!(setup_bot(tgbot, tx), db_task(rx)) {
+    if let Err(e) = tokio::try_join!(setup_bot(tgbot, tx), db_task(rx), run_server(tx2)) {
         error!("{}", e);
     }
 }
