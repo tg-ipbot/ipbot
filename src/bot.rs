@@ -114,7 +114,9 @@ async fn get_my_ip<T: 'static + Sync + Send + Debug + AsRef<str>>(
 
     let response = rx.await.unwrap();
     debug!("Get my IP response: {:?}", response);
-    bot.send_message(msg.chat.id, response.as_ref()).await?;
+    bot.send_message(msg.chat.id, response.as_ref())
+        .parse_mode(ParseMode::MarkdownV2)
+        .await?;
 
     Ok(())
 }
