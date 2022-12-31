@@ -58,7 +58,7 @@ fn schema() -> teloxide::dispatching::UpdateHandler<Box<dyn error::Error + Send 
         .branch(
             dptree::filter(|msg: Message| {
                 if let Some(text) = msg.text() {
-                    return text.starts_with("/");
+                    return text.starts_with('/');
                 }
 
                 false
@@ -127,7 +127,7 @@ async fn help(bot: Bot, msg: Message) -> Result<(), Box<dyn error::Error + Send 
 connect to it from another location if you are connected to the same VPN network.
 
 {}",
-        Command::descriptions().to_string()
+        Command::descriptions()
     );
 
     bot.send_message(msg.chat.id, help_str).await?;
