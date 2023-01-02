@@ -171,7 +171,13 @@ async fn process_get_ip_reqeust<T: Sync + Send + Debug + From<String>>(
     let app_key = app_iter.first();
 
     if app_key.is_none() {
+        let response = "No application registered, so no reports available".to_string();
         debug!("No application registered for the user {id}");
+
+        if command.tx_channel.send(response.into()).is_err() {
+            error!("Sending to channel failed");
+        }
+
         return;
     }
 
