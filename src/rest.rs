@@ -1,5 +1,5 @@
 use std::convert::Infallible;
-use std::net::IpAddr;
+use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 
 use log::{debug, warn};
@@ -15,8 +15,14 @@ pub(super) async fn run_server(
     tx: tokio::sync::mpsc::Sender<ApplicationCommand<String>>,
 ) -> Result<(), &'static str> {
     let rest_routes = init_rest(tx);
+    let address: SocketAddr = "0.0.0.0:7433".parse().unwrap();
 
-    warp::serve(rest_routes).run(([127, 0, 0, 1], 1234)).await;
+    warp::serve(rest_routes)
+        .tls()
+        .cert_path("certs/cert.pem")
+        .key_path("certs/private-key.pk8")
+        .run(address)
+        .await;
 
     Ok(())
 }
