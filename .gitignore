@@ -1,3 +1,6 @@
+# Generated self-signed keys
+*.pem
+*.pk8
 # IDEA
 /.idea/
 # Application specific stuff

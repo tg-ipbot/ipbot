@@ -15,14 +15,9 @@ pub(super) async fn run_server(
     tx: tokio::sync::mpsc::Sender<ApplicationCommand<String>>,
 ) -> Result<(), &'static str> {
     let rest_routes = init_rest(tx);
-    let address: SocketAddr = "0.0.0.0:7433".parse().unwrap();
+    let address: SocketAddr = "0.0.0.0:7443".parse().unwrap();
 
-    warp::serve(rest_routes)
-        .tls()
-        .cert_path("certs/cert.pem")
-        .key_path("certs/private-key.pk8")
-        .run(address)
-        .await;
+    warp::serve(rest_routes).run(address).await;
 
     Ok(())
 }

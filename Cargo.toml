@@ -13,7 +13,7 @@ hex = "~0.4"
 log = "~0.4"
 env_logger = "~0.10"
 redis = { version = "~0.22", features = ["tokio-comp"] }
-teloxide = { version = "0.11", features = ["macros"] }
-tokio = { version = "~1.23", features = ["rt-multi-thread", "macros", "sync"] }
+teloxide = { version = "0.12", features = ["macros"] }
+tokio = { version = "~1.24", features = ["rt-multi-thread", "macros", "sync"] }
 rand = "~0.8"
 warp = { version = "~0.3", features = ["tls"] }
