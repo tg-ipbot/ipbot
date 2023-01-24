@@ -1,0 +1,9 @@
+# Non-container supplementary directories
+/certs/
+/target/
+/conf/
+/run/
+.gitignore
+ipbot-pod.sh
+LICENSE*
+README.md
