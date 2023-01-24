@@ -1,4 +1,5 @@
 # Non-container supplementary directories
+/build/
 /certs/
 /target/
 /conf/
