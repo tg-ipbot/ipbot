@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eou pipefail
+set -eo
 
 if [[ "$#" -ne 1 ]]; then
   cat << EOF
@@ -31,5 +31,5 @@ podman create -t --pod ipbot-pod --restart unless-stopped \
     -e RUST_LOG=debug \
     -e "TELOXIDE_TOKEN=$TOKEN" \
     -e "REDIS_SOCKET=redis+unix:///run/redis.sock" \
-    docker.io/vpetrigo/ipbot:v0.1.0 \
+    docker.io/vpetrigo/ipbot:0.1.0 \
     /ipbot/ipbot -v
