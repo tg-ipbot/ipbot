@@ -42,11 +42,11 @@ for arch in amd64 arm64; do
 
     buildah bud \
       -t "$BASE_IMAGE_NAME-$arch" \
-      --manifest ${MANIFEST_NAME} \
+      --manifest "${MANIFEST_NAME}" \
       "${ARCH_FLAGS[@]}" "${BUILD_PATH}"
 done
 # Publish images to the registry
 if [[ "$SHOULD_PUBLISH" -eq 1 ]]; then
-  buildah manifest push --all "$BASE_IMAGE_NAME" \
+  buildah manifest push --all "${MANIFEST_NAME}" \
     "docker://$BASE_IMAGE_NAME"
 fi
