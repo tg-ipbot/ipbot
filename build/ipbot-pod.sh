@@ -31,5 +31,5 @@ podman create -t --pod ipbot-pod --restart unless-stopped \
     -e RUST_LOG=debug \
     -e "TELOXIDE_TOKEN=$TOKEN" \
     -e "REDIS_SOCKET=redis+unix:///run/redis.sock" \
-    localhost/ipbot:v0.1.0 \
+    docker.io/vpetrigo/ipbot:v0.1.0 \
     /ipbot/ipbot -v

@@ -5,6 +5,5 @@
 /conf/
 /run/
 .gitignore
-ipbot-pod.sh
 LICENSE*
 README.md
