@@ -17,6 +17,19 @@ TOKEN="$1"
 
 podman pod create --userns=keep-id -n ipbot-pod -p 7443:7443
 
+# Podman 3 usage
+# Volume mounting may be required to be updated to use :U flag, like
+#   -v ipbot-vol:/run:U
+# to properly tell a container to use correct UID:GID when accessing
+# volume stuff
+
+# Also if you use a webserver you may need to add a rule to allow
+# input on 7443 port
+# iptables:
+# iptables -I INPUT -t tcp -i <docker/podman network iface> --dport 7443 -j ACCEPT
+# nftables:
+# nft add rule ip filter input iif <docker/podman network iface> tcp dport 7443 accept
+
 podman create --pod ipbot-pod -t --restart unless-stopped \
     --name ipbot-db \
     -v $PWD/conf:/usr/local/etc/redis \
