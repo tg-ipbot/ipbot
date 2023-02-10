@@ -1,5 +1,6 @@
 use core::fmt::Debug;
 use std::net::IpAddr;
+use std::path::Path;
 use std::str::FromStr;
 use std::time;
 
@@ -59,6 +60,11 @@ pub(crate) async fn db_task<T: Sync + Send + Debug + From<&'static str> + From<S
     let redis_socket =
         std::env::var("REDIS_SOCKET").expect("Specify REDIS_SOCKET environment variable");
     debug!("socket: {}", redis_socket);
+
+    while Path::new(redis_socket.as_str()).try_exists().is_err() {
+        tokio::time::sleep(time::Duration::from_secs(1)).await;
+    }
+
     let client = match redis::Client::open(redis_socket) {
         Ok(client) => client,
         Err(ref db_err) => {
